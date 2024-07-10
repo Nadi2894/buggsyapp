@@ -7,8 +7,8 @@ export default function Search() {
       <form>
         <input
           type="search"
-          placeholder="Search tickets "
           className="search-input"
+          placeholder="Search Tickets"
         />
       </form>
     </div>
