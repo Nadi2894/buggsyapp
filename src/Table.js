@@ -16,14 +16,12 @@ export const Table = () => {
     tableInstance;
 
   return (
-    <table {...getTableProps()}>
+    <table className="my-table" {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column) => (
-              <th {...column.getHeaderGroupProps()}>
-                {column.render(`Header`)}
-              </th>
+              <th {...column.getHeaderProps()}>{column.render(`Header`)}</th>
             ))}
           </tr>
         ))}{" "}
@@ -34,10 +32,9 @@ export const Table = () => {
           prepareRow(row);
           return (
             <tr {...row.getRowProps()}>
-              {row.cells.map((cell) => {
-                return;
-                <td {...cell.getCellProps()}>{cell.render(`Cell`)}</td>;
-              })}
+              {row.cells.map((cell) => (
+                <td {...cell.getCellProps()}>{cell.render(`Cell`)}</td>
+              ))}
             </tr>
           );
         })}
