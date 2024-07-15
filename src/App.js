@@ -3,6 +3,7 @@ import Buggsyapp from "./Buggsyapp";
 import "./App.css";
 import Search from "./Search";
 import { Table } from "./Table";
+import { SortingTable } from "./SortingTable";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Buggsyapp />
         <Search />
         <Table />
+        <SortingTable />
       </header>
     </div>
   );
