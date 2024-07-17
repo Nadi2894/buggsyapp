@@ -8,15 +8,14 @@ export const SortingTable = () => {
   const columns = useMemo(() => COLUMNS, []);
   const data = useMemo(() => Tickets, []);
 
-  const tableInstance = useTable(
-    {
-      columns,
-      data,
-    },
-    useSortBy
-  );
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    tableInstance;
+    useTable(
+      {
+        columns,
+        data,
+      },
+      useSortBy
+    );
 
   return (
     <table className="my-table" {...getTableProps()}>
@@ -30,7 +29,7 @@ export const SortingTable = () => {
                   {column.isSorted
                     ? column.isSortedDesc
                       ? `⬇️ `
-                      : ` ⬆⬆️ `
+                      : ` ⬆️ `
                     : ``}
                 </span>
               </th>
