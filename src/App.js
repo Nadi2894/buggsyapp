@@ -2,8 +2,7 @@ import React from "react";
 import Buggsyapp from "./Buggsyapp";
 import "./App.css";
 import Search from "./Search";
-
-import { SortingTable } from "./SortingTable";
+import { PaginationTable } from "./PaginationTable";
 
 function App() {
   return (
@@ -11,8 +10,7 @@ function App() {
       <header>
         <Buggsyapp />
         <Search />
-
-        <SortingTable />
+        <PaginationTable />
       </header>
     </div>
   );
