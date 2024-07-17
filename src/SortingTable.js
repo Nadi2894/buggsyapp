@@ -8,14 +8,20 @@ export const SortingTable = () => {
   const columns = useMemo(() => COLUMNS, []);
   const data = useMemo(() => Tickets, []);
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable(
-      {
-        columns,
-        data,
-      },
-      useSortBy
-    );
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    footerGroups,
+    rows,
+    prepareRow,
+  } = useTable(
+    {
+      columns,
+      data,
+    },
+    useSortBy
+  );
 
   return (
     <table className="my-table" {...getTableProps()}>
@@ -49,6 +55,15 @@ export const SortingTable = () => {
           );
         })}
       </tbody>
+      <tfoot>
+        {footerGroups.map((footerGroup) => (
+          <tr {...footerGroup.getFooterGroupProps()}>
+            {footerGroup.headers.map((column) => (
+              <td {...column.getFooterProps}>{column.render(`Footer`)}</td>
+            ))}
+          </tr>
+        ))}
+      </tfoot>
     </table>
   );
 };
