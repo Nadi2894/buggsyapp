@@ -15,6 +15,7 @@ export const Table = () => {
     footerGroups,
     rows,
     prepareRow,
+  
   } = useTable({
     columns,
     data,
@@ -37,7 +38,14 @@ export const Table = () => {
           return (
             <tr {...row.getRowProps()}>
               {row.cells.map((cell) => (
-                <td {...cell.getCellProps()}>{cell.render(`Cell`)}</td>
+                <td {...cell.getCellProps()}>
+                  {cell.render(`Cell`)}
+                  <input
+                    type="checkbox"
+                    checked={item.completed}
+                    onChange={(e) => onChangeCheckBoxEvent(e, index)}
+                  />
+                </td>
               ))}
             </tr>
           );

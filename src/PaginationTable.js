@@ -1,8 +1,22 @@
 import React, { useMemo } from "react";
 import "./Table.css";
 import Tickets from "./tickets.json";
-import { useTable, useSortBy, usePagination } from "react-table";
+import { useTable, useSortBy, usePagination, useRowSelect } from "react-table";
 import { COLUMNS } from "./columns";
+
+const IndeterminateChekbox = React.forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef();
+    const resolvedRef = ref || defaultRef;
+
+    React.useEffect(() => {
+      if (resolvedRef.current) {
+        resolvedRef.current.indeterminate = indeterminate;
+      }
+    }, [resolvedRef, indeterminate]);
+    return <input type="checkbox" ref={resolvedRef} {...rest} />;
+  }
+);
 
 export const PaginationTable = () => {
   const columns = useMemo(() => COLUMNS, []);
@@ -18,20 +32,37 @@ export const PaginationTable = () => {
     canNextPage,
     canPreviousPage,
     pageOptions,
-    gotoPage,
+    goToPage,
     pageCount,
     setPageSize,
     state,
     prepareRow,
+    selectedFlatRows,
   } = useTable(
     {
       columns,
       data,
-      initialState: { pageIndex: 2 },
+      initialState: { pageIndex: 0 },
     },
     useSortBy,
-    usePagination
+    usePagination,
+    useRowSelect,
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => [
+        {
+          id: "selection",
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <IndeterminateChekbox {...getToggleAllRowsSelectedProps()} />
+          ),
+          Cell: ({ row }) => (
+            <IndeterminateChekbox {...row.getToggleRowsSelectedProps()} />
+          ),
+        },
+        ...columns,
+      ]);
+    }
   );
+
   const { pageIndex, pageSize } = state;
   return (
     <>
@@ -41,7 +72,7 @@ export const PaginationTable = () => {
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
                 <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                  {column.render(`header`)}
+                  {column.render(`Header`)}
                   <span>
                     {column.isSorted
                       ? column.isSortedDesc
@@ -59,9 +90,11 @@ export const PaginationTable = () => {
             prepareRow(row);
             return (
               <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => (
-                  <td {...cell.getCellProps()}>{cell.render(`Cell`)}</td>
-                ))}
+                {row.cells.map((cell) => {
+                  return (
+                    <td {...cell.getCellProps()}>{cell.render(`Cell`)}</td>
+                  );
+                })}
               </tr>
             );
           })}
@@ -76,7 +109,7 @@ export const PaginationTable = () => {
           {``}
         </span>
         <span>
-          | gotoPage:{``}
+          | Go To Page:{``}
           <input
             type="number"
             defaultValue={pageIndex + 1}
@@ -84,7 +117,7 @@ export const PaginationTable = () => {
               const pageNumber = e.target.value
                 ? Number(e.target.value) - 1
                 : 0;
-              gotoPage(pageNumber);
+              goToPage(pageNumber);
             }}
             style={{ width: `50px` }}
           />
@@ -99,7 +132,7 @@ export const PaginationTable = () => {
             </option>
           ))}
         </select>
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+        <button onClick={() => goToPage(0)} disabled={!canPreviousPage}>
           {`<<`}
         </button>
         <button onClick={() => previousPage()} disabled={!canPreviousPage}>
@@ -108,7 +141,7 @@ export const PaginationTable = () => {
         <button onClick={() => nextPage()} disabled={!canNextPage}>
           Next
         </button>
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+        <button onClick={() => goToPage(pageCount - 1)} disabled={!canNextPage}>
           {`>>`}
         </button>
       </div>
